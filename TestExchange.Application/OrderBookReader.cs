@@ -3,7 +3,7 @@ using TestExchange.Domain;
 
 namespace TestExchange.Application
 {
-    public class OrderBookReader
+    public class OrderBookReader : IOrderBookReader
     {
         private string filePath;
 
@@ -42,7 +42,7 @@ namespace TestExchange.Application
                     orderBooks.Add(parts[0], orderbookDTO.ConvertToOrderBook(parts[0]));
                 }
 
-                Console.WriteLine("Reading complete. Total number of lines: "+ linenumber);
+                Console.WriteLine("Reading complete. Total number of lines: " + linenumber);
 
                 return orderBooks;
             }

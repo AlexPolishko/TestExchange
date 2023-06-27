@@ -2,78 +2,77 @@
 
 namespace TestExchange.Application
 {
-    public class Resolver
+    public class Resolver : IResolver
     {
-        private readonly CryptoExchangeStore store;
+        private readonly ICryptoExchangeStore store;
+        private readonly PurchaseList purchaseList = new PurchaseList();
+        private readonly Wallet wallet;
+        private decimal remainingAmount = 0;
 
-        public Resolver(CryptoExchangeStore store)
+        public Resolver(ICryptoExchangeStore store)
         {
             this.store = store;
+            wallet = new Wallet(store.Exchanges);
         }
 
         public PurchaseList Buy(decimal targetAmount)
         {
-            var purchaseList = new PurchaseList();
-            var index = 0;
-            var wallet = new Dictionary<string, decimal>();
-            var remainingAmount = targetAmount;
+            remainingAmount = targetAmount;
 
-            foreach (var exahange in store.Exchanges)
-            {
-                wallet.Add(exahange.Key, exahange.Value.Money);
-            }
-
-            while (remainingAmount > 0 || index> store.FlattenedAsks.Count)
+            for (int index = 0; index < store.FlattenedAsks.Count; index++)
             {
                 var currentAsk = store.FlattenedAsks[index];
+                var purchase = new Order();
+
+                if (wallet.EmptyWallet(currentAsk.ExchangeId))
+                {
+                    continue;
+                }
 
                 // Ask has more then enough 
                 if (currentAsk.Amount > remainingAmount)
                 {
                     // And we have enough money
-                    if (currentAsk.Price * remainingAmount > wallet[currentAsk.ExchangeId])
+                    if (currentAsk.Price * remainingAmount < wallet.Money(currentAsk.ExchangeId))
                     {
                         // We buy all and exit
-                        var purchase = new Order(currentAsk.Price, remainingAmount, OrderType.Buy, currentAsk.ExchangeId);
-                        purchaseList.AddPurchase(purchase);
-                        return purchaseList;
+                        purchase = Order.CreatePurchase(currentAsk, remainingAmount);
                     }
                     else
                     {
                         // Purchase using all of our available funds
-                        var amount = wallet[currentAsk.ExchangeId] / currentAsk.Price;
-                        wallet[currentAsk.ExchangeId] = 0;
-                        remainingAmount -= amount;
-                        var purchase = new Order(currentAsk.Price, amount, OrderType.Buy, currentAsk.ExchangeId);
-                        purchaseList.AddPurchase(purchase);
+                        purchase = Order.CreatePurchaseForAllMoney(currentAsk, wallet);
                     }
 
                 }
                 else
                 {
-                    // Ask has not enough amount
-                    if (currentAsk.TotalCost < wallet[currentAsk.ExchangeId])
+                    if (currentAsk.TotalCost < wallet.Money(currentAsk.ExchangeId))
                     {
-                        wallet[currentAsk.ExchangeId] -= currentAsk.TotalCost;
-                        remainingAmount -= currentAsk.Amount;
-                        var purchase = new Order(currentAsk.Price, currentAsk.Amount, OrderType.Buy, currentAsk.ExchangeId);
-                        purchaseList.AddPurchase(purchase);
+                        purchase = Order.CreatePurchase(currentAsk);
                     }
                     else
                     {
-                        // Purchase using all of our available funds
-                        var amount = wallet[currentAsk.ExchangeId] / currentAsk.Price;
-                        wallet[currentAsk.ExchangeId] = 0;
-                        remainingAmount -= amount;
-                        var purchase = new Order(currentAsk.Price, amount, OrderType.Buy, currentAsk.ExchangeId);
-                        purchaseList.AddPurchase(purchase);
+                        purchase = Order.CreatePurchaseForAllMoney(currentAsk, wallet);
                     }
+
                 }
 
-                index++;
+                Buy(purchase);
+
+                if (remainingAmount == 0)
+                    return purchaseList;
             }
 
             return purchaseList;
+        }
+
+        private void Buy(Order purchase)
+        {
+            remainingAmount -= purchase.Amount;
+            purchaseList.AddPurchase(purchase);
+            purchaseList.RemainingAmount = remainingAmount;
+            wallet.PurchaseAll(purchase);
         }
     }
 }

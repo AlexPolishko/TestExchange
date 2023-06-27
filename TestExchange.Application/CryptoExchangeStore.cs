@@ -3,24 +3,24 @@ using TestExchange.Domain;
 
 namespace TestExchange.Application
 {
-    public class CryptoExchangeStore
+    public class CryptoExchangeStore : ICryptoExchangeStore
     {
-        private OrderBookReader reader;
-        public Dictionary<string, СryptoExchange> Exchanges = new Dictionary<string, СryptoExchange>();
-        public List<Order> FlattenedAsks = new List<Order>();
-        public List<Order> FlattenedBids = new List<Order>();
+        private IOrderBookReader reader;
+        public Dictionary<string, CryptoExchange> Exchanges { get; } = new Dictionary<string, CryptoExchange>();
+        public List<Order> FlattenedAsks { get; } = new List<Order>();
+        public List<Order> FlattenedBids { get; } = new List<Order>();
 
-        public CryptoExchangeStore(OrderBookReader reader)
+        public CryptoExchangeStore(IOrderBookReader reader)
         {
             this.reader = reader;
         }
 
-        public СryptoExchange Create(string Id, OrderBook orderBook)
+        private CryptoExchange Create(string Id, OrderBook orderBook)
         {
             decimal moneyBalance = 5;   //TODO: Need source from wallet
             decimal BTCBalance = 5;     //TODO: Need source from wallet
 
-            return new СryptoExchange(Id, orderBook, moneyBalance, BTCBalance);
+            return new CryptoExchange(Id, orderBook, moneyBalance, BTCBalance);
         }
 
         public void FulFillExchanges()
@@ -42,7 +42,7 @@ namespace TestExchange.Application
 
             FlattenedBids.Sort((a, b) => b.Price.CompareTo(a.Price));
             FlattenedAsks.Sort((a, b) => a.Price.CompareTo(b.Price));
-            
+
             t1.Stop();
             Console.WriteLine($"Sorting duration: {t1.ElapsedMilliseconds}");
         }

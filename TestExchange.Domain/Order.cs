@@ -20,5 +20,19 @@
         {
             get { return Price * Amount; }
         }
+
+        public static Order CreatePurchase(Order order, decimal? amount = null)
+        {
+            if (amount == null)
+                amount = order.Amount;
+
+            return new Order(order.Price, amount.Value, order.OrderType, order.ExchangeId);
+        }
+
+        public static Order CreatePurchaseForAllMoney(Order order, Wallet wallet)
+        {
+            var amount = Decimal.Divide(wallet.Money(order.ExchangeId), order.Price);
+            return Order.CreatePurchase(order, amount);
+        }
     }
 }

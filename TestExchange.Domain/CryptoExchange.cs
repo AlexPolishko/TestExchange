@@ -1,8 +1,8 @@
 ﻿namespace TestExchange.Domain
 {
-    public class СryptoExchange
+    public class CryptoExchange
     {
-        public СryptoExchange(string id, OrderBook orderBook, decimal money, decimal amount)
+        public CryptoExchange(string id, OrderBook orderBook, decimal money, decimal amount)
         {
             Id = id;
             OrderBook = orderBook;
