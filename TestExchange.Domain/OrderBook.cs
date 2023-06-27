@@ -2,6 +2,7 @@
 {
     public class OrderBook
     {
-        public Order[] Items { get; set; }
+        public Order[] Bids { get; set; }
+        public Order[] Asks { get; set; }
     }
 }
