@@ -13,5 +13,9 @@
         public decimal Amount { get; set; }
         public OrderType OrderType { get; set; }
 
+        public decimal TotalCost
+        {
+            get { return Price * Amount; }
+        }
     }
 }
