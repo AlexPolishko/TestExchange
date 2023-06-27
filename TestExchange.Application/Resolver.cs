@@ -4,35 +4,73 @@ namespace TestExchange.Application
 {
     public class Resolver
     {
-        private readonly OrderBook orderBook;
+        private readonly CryptoExchangeStore store;
 
-        public Resolver(OrderBook orderBook)
+        public Resolver(CryptoExchangeStore store)
         {
-            this.orderBook = orderBook;
+            this.store = store;
         }
 
-        public PurchaseList Buy(decimal balance)
+        public PurchaseList Buy(decimal targetAmount)
         {
             var purchaseList = new PurchaseList();
-            var sortedAsks = orderBook.Asks.OrderBy(x => x.Price).ToArray();
             var index = 0;
+            var wallet = new Dictionary<string, decimal>();
+            var remainingAmount = targetAmount;
 
-            while (balance>0)
+            foreach (var exahange in store.Exchanges)
             {
-                if (balance > sortedAsks[index].TotalCost)
+                wallet.Add(exahange.Key, exahange.Value.Money);
+            }
+
+            while (remainingAmount > 0 || index> store.FlattenedAsks.Count)
+            {
+                var currentAsk = store.FlattenedAsks[index];
+
+                // Ask has more then enough 
+                if (currentAsk.Amount > remainingAmount)
                 {
-                    balance -= sortedAsks[index].TotalCost;
-                    Console.WriteLine($"Ask with price:{sortedAsks[index].Price} was bought with amount {sortedAsks[index].Amount}. Remain balance {balance}");
-                    purchaseList.AddPurchase(sortedAsks[index]);
-                    index++;
+                    // And we have enough money
+                    if (currentAsk.Price * remainingAmount > wallet[currentAsk.ExchangeId])
+                    {
+                        // We buy all and exit
+                        var purchase = new Order(currentAsk.Price, remainingAmount, OrderType.Buy, currentAsk.ExchangeId);
+                        purchaseList.AddPurchase(purchase);
+                        return purchaseList;
+                    }
+                    else
+                    {
+                        // Purchase using all of our available funds
+                        var amount = wallet[currentAsk.ExchangeId] / currentAsk.Price;
+                        wallet[currentAsk.ExchangeId] = 0;
+                        remainingAmount -= amount;
+                        var purchase = new Order(currentAsk.Price, amount, OrderType.Buy, currentAsk.ExchangeId);
+                        purchaseList.AddPurchase(purchase);
+                    }
+
                 }
                 else
                 {
-                    var amount = balance / sortedAsks[index].Price;
-                    Console.WriteLine($"Ask with price:{sortedAsks[index].Price} was bought with amount {amount} of {sortedAsks[index].Amount}. purchases have been finalized.");
-                    purchaseList.AddPurchase(new Order(sortedAsks[index].Price, amount, OrderType.Buy);
-                    balance = 0;
+                    // Ask has not enough amount
+                    if (currentAsk.TotalCost < wallet[currentAsk.ExchangeId])
+                    {
+                        wallet[currentAsk.ExchangeId] -= currentAsk.TotalCost;
+                        remainingAmount -= currentAsk.Amount;
+                        var purchase = new Order(currentAsk.Price, currentAsk.Amount, OrderType.Buy, currentAsk.ExchangeId);
+                        purchaseList.AddPurchase(purchase);
+                    }
+                    else
+                    {
+                        // Purchase using all of our available funds
+                        var amount = wallet[currentAsk.ExchangeId] / currentAsk.Price;
+                        wallet[currentAsk.ExchangeId] = 0;
+                        remainingAmount -= amount;
+                        var purchase = new Order(currentAsk.Price, amount, OrderType.Buy, currentAsk.ExchangeId);
+                        purchaseList.AddPurchase(purchase);
+                    }
                 }
+
+                index++;
             }
 
             return purchaseList;

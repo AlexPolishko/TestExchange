@@ -8,7 +8,7 @@ namespace TestExchange.Application
         public OrderContainer[] Bids { get; set; }
         public OrderContainer[] Asks { get; set; }
 
-        public OrderBook ConvertToOrderBook()
+        public OrderBook ConvertToOrderBook(string exchangeId)
         {
             var result = new OrderBook();
             result.Bids = new Order[Bids.Length];
@@ -16,12 +16,12 @@ namespace TestExchange.Application
 
             for (int i=0; i<Bids.Length;i++)
             {
-                result.Bids[i] = new Order(Bids[i].Order.Price, Bids[i].Order.Amount, OrderType.Buy);
+                result.Bids[i] = new Order(Bids[i].Order.Price, Bids[i].Order.Amount, OrderType.Buy, exchangeId);
             }
 
             for (int i = 0; i < Asks.Length; i++)
             {
-                result.Asks[i] = new Order(Asks[i].Order.Price, Asks[i].Order.Amount, OrderType.Sell);
+                result.Asks[i] = new Order(Asks[i].Order.Price, Asks[i].Order.Amount, OrderType.Sell, exchangeId);
             }
 
             return result;

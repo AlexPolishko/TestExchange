@@ -1,9 +1,8 @@
-﻿using System;
-using TestExchange.Application;
+﻿using TestExchange.Application;
 using TestExchange.Domain;
 
 namespace TestExchange
-{ 
+{
     internal class Program
     {
         static void Main(string[] args)
@@ -11,34 +10,10 @@ namespace TestExchange
             Console.WriteLine("Start!");
 
             var reader = new OrderBookReader("order_books_data");
-            var orderbooks = reader.Read();
+            var store = new CryptoExchangeStore(reader);
+            store.FulFillExchanges();
 
-            Random random = new Random();
-            int randomIndex = random.Next(0, orderbooks.Count);
-            string randomKey = orderbooks.Keys.ElementAt(randomIndex);
-
-            var orderbook = orderbooks[randomKey];
-            PrintAsksBids(orderbook);
-
-            var resolver = new Resolver(orderbook);
-
-            decimal input = 0;
-            while (input != -1)
-            {
-                Console.WriteLine("Enter your balance (-1 to exit):");
-                string inputString = Console.ReadLine();
-
-                if (decimal.TryParse(inputString, out input))
-                {
-                    // Process the input digit
-                    Console.WriteLine("You entered: " + input);
-                    resolver.Buy(input);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid balance.");
-                }
-            }
+            Console.WriteLine($"End {store.Exchanges.Count} and {store.FlattenedAsks.Count}");
         }
 
         private static void PrintAsksBids(OrderBook orderbook)
@@ -54,6 +29,16 @@ namespace TestExchange
             foreach (var item in orderbook.Bids)
             {
                 Console.WriteLine($"{item.Price} for {item.Amount}");
+            }
+        }
+
+        private static void PrintPurchaseList(PurchaseList list, decimal balance)
+        {
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                balance -= list.Items[i].TotalCost;
+                Console.WriteLine($"Ask with price:{list.Items[i].Price} was bought with amount {list.Items[i].Amount}");
+                Console.WriteLine($"Total cost: {list.Items[i].TotalCost}. Your balance: {balance}");
             }
         }
     }
