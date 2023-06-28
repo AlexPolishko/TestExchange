@@ -15,13 +15,14 @@ namespace TestExchange.Application.Tests
             //Arrange
             var amount = 0.05m;
             ICryptoExchangeStore store = CreateAsksWithAmount(1, 1, 1);
+            var wallet = CreateWalletWithMoney(10m);
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 10, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
                 });
 
-            var resolver = new Resolver(store);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(amount);
             expected.AddPurchase(new Order(1, amount, OrderType.Sell, exchangeId1));
 
@@ -41,10 +42,10 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 10, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
                 });
-
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithMoney(10m);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, 1, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(2, 1, OrderType.Sell, exchangeId1));
@@ -67,12 +68,12 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 2, 0) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null, 3, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
+                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
 
                 });
-
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithMoney(2m, 3m);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, 2, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(3, 1, OrderType.Sell, exchangeId2));
@@ -94,12 +95,12 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 2, 0) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null, 5, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
+                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
 
                 });
-
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithMoney(2m, 5m);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, 1, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(2, 0.5m, OrderType.Sell, exchangeId1));
@@ -128,12 +129,13 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 0.08m, 0) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null, 3m, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
+                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
 
                 });
+            var wallet = CreateWalletWithMoney(0.08m, 3m);
 
-            var resolver = new Resolver(store);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1.05m, 0.05m, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(1.10m, 0.025m, OrderType.Sell, exchangeId1));
@@ -158,12 +160,14 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 2, 0) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null, 3, 0) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
+                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
 
                 });
 
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithMoney(2m, 3m);
+
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(1);
             expected.AddPurchase(new Order(1, 2, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(3, 1, OrderType.Sell, exchangeId2));
@@ -191,10 +195,11 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 0, 10) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
                 });
 
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithCoins(10m);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, amount, OrderType.Sell, exchangeId1));
 
@@ -220,10 +225,12 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 0, 10) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
                 });
 
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithCoins(10m);
+
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(90m);
             expected.AddPurchase(new Order(1, 5, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(2, 5, OrderType.Sell, exchangeId1));
@@ -251,10 +258,12 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 0, 10) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
                 });
 
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithCoins(10m);
+
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, 5m, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(2, 5m, OrderType.Sell, exchangeId1));
@@ -282,11 +291,12 @@ namespace TestExchange.Application.Tests
 
             store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null, 0, 10) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null, 0, 10) }
+                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
+                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
                 });
 
-            var resolver = new Resolver(store);
+            var wallet = CreateWalletWithCoins(10m, 10m);
+            var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
             expected.AddPurchase(new Order(1, 5m, OrderType.Sell, exchangeId1));
             expected.AddPurchase(new Order(2, 5m, OrderType.Sell, exchangeId2));
@@ -327,6 +337,33 @@ namespace TestExchange.Application.Tests
             return store;
         }
 
+        private static Wallet CreateWalletWithMoney(params decimal[] money)
+        {
+            var moneyDictionary = new Dictionary<string, decimal>();
+
+            for (int i = 0; i < money.Length; i++)
+            {
+                if (i == 0) moneyDictionary.Add(exchangeId1, money[i]);
+                if (i == 1) moneyDictionary.Add(exchangeId2, money[i]);
+                if (i == 2) moneyDictionary.Add(exchangeId3, money[i]);
+            }
+
+            return new Wallet(moneyDictionary, null);
+        }
+
+        private static Wallet CreateWalletWithCoins(params decimal[] coins)
+        {
+            var coinsDictionary = new Dictionary<string, decimal>();
+
+            for (int i = 0; i < coins.Length; i++)
+            {
+                if (i == 0) coinsDictionary.Add(exchangeId1, coins[i]);
+                if (i == 1) coinsDictionary.Add(exchangeId2, coins[i]);
+                if (i == 2) coinsDictionary.Add(exchangeId3, coins[i]);
+            }
+
+            return new Wallet(null, coinsDictionary);
+        }
 
     }
 }

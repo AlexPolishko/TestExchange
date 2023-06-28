@@ -7,10 +7,10 @@ namespace TestExchange.Application
         private readonly ICryptoExchangeStore store;
         private readonly Wallet wallet;
 
-        public Resolver(ICryptoExchangeStore store)
+        public Resolver(ICryptoExchangeStore store, Wallet wallet)
         {
             this.store = store;
-            wallet = new Wallet(store.Exchanges);
+            this.wallet = wallet;
         }
 
         public PurchaseList Buy(decimal targetAmount)
@@ -82,11 +82,25 @@ namespace TestExchange.Application
                 // Bid has more then enough 
                 if (currentBids.Amount > purchaseList.RemainingAmount)
                 {
-                    purchase = Order.CreatePurchase(currentBids, purchaseList.RemainingAmount);
+                    if (purchaseList.RemainingAmount > wallet.Coins(currentBids.ExchangeId))
+                    {
+                        purchase = Order.CreatePurchase(currentBids, wallet.Coins(currentBids.ExchangeId));
+                    }
+                    else
+                    {
+                        purchase = Order.CreatePurchase(currentBids, purchaseList.RemainingAmount);
+                    }
                 }
                 else
                 {
-                    purchase = Order.CreatePurchase(currentBids);
+                    if (currentBids.Amount > wallet.Coins(currentBids.ExchangeId))
+                    {
+                        purchase = Order.CreatePurchase(currentBids, wallet.Coins(currentBids.ExchangeId));
+                    }
+                    else
+                    {
+                        purchase = Order.CreatePurchase(currentBids);
+                    }
                 }
 
                 Sell(purchaseList, purchase);
@@ -95,7 +109,7 @@ namespace TestExchange.Application
                     return purchaseList;
 
             }
-        
+
             return purchaseList;
 
         }
