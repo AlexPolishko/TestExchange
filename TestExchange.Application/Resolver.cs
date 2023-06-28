@@ -5,9 +5,7 @@ namespace TestExchange.Application
     public class Resolver : IResolver
     {
         private readonly ICryptoExchangeStore store;
-        private readonly PurchaseList purchaseList = new PurchaseList();
         private readonly Wallet wallet;
-        private decimal remainingAmount = 0;
 
         public Resolver(ICryptoExchangeStore store)
         {
@@ -17,7 +15,7 @@ namespace TestExchange.Application
 
         public PurchaseList Buy(decimal targetAmount)
         {
-            remainingAmount = targetAmount;
+            var purchaseList = new PurchaseList(targetAmount);
 
             for (int index = 0; index < store.FlattenedAsks.Count; index++)
             {
@@ -30,13 +28,13 @@ namespace TestExchange.Application
                 }
 
                 // Ask has more then enough 
-                if (currentAsk.Amount > remainingAmount)
+                if (currentAsk.Amount > purchaseList.RemainingAmount)
                 {
                     // And we have enough money
-                    if (currentAsk.Price * remainingAmount < wallet.Money(currentAsk.ExchangeId))
+                    if (currentAsk.Price * purchaseList.RemainingAmount < wallet.Money(currentAsk.ExchangeId))
                     {
                         // We buy all and exit
-                        purchase = Order.CreatePurchase(currentAsk, remainingAmount);
+                        purchase = Order.CreatePurchase(currentAsk, purchaseList.RemainingAmount);
                     }
                     else
                     {
@@ -58,21 +56,59 @@ namespace TestExchange.Application
 
                 }
 
-                Buy(purchase);
+                Buy(purchaseList, purchase);
 
-                if (remainingAmount == 0)
+                if (purchaseList.RemainingAmount == 0)
                     return purchaseList;
             }
 
             return purchaseList;
         }
 
-        private void Buy(Order purchase)
+        public PurchaseList Sell(decimal targetAmount)
         {
-            remainingAmount -= purchase.Amount;
+            var purchaseList = new PurchaseList(targetAmount);
+
+            for (int index = 0; index < store.FlattenedBids.Count; index++)
+            {
+                var currentBids = store.FlattenedBids[index];
+                var purchase = new Order();
+
+                if (wallet.EmptyCoins(currentBids.ExchangeId))
+                {
+                    continue;
+                }
+
+                // Bid has more then enough 
+                if (currentBids.Amount > purchaseList.RemainingAmount)
+                {
+                    purchase = Order.CreatePurchase(currentBids, purchaseList.RemainingAmount);
+                }
+                else
+                {
+                    purchase = Order.CreatePurchase(currentBids);
+                }
+
+                Sell(purchaseList, purchase);
+
+                if (purchaseList.RemainingAmount == 0)
+                    return purchaseList;
+
+            }
+        
+            return purchaseList;
+
+        }
+        private void Buy(PurchaseList purchaseList, Order purchase)
+        {
             purchaseList.AddPurchase(purchase);
-            purchaseList.RemainingAmount = remainingAmount;
             wallet.PurchaseAll(purchase);
+        }
+
+        private void Sell(PurchaseList purchaseList, Order purchase)
+        {
+            purchaseList.AddPurchase(purchase);
+            wallet.SaleAll(purchase);
         }
     }
 }

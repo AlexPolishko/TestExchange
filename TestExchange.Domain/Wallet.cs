@@ -2,25 +2,21 @@
 {
     public class Wallet
     {
-        private Dictionary<string, Decimal> _wallets = new Dictionary<string, Decimal>();
+        private Dictionary<string, Decimal> money = new Dictionary<string, Decimal>();
+        private Dictionary<string, Decimal> coins = new Dictionary<string, Decimal>();
 
-        public  Wallet(Dictionary<string, CryptoExchange> exchanges)
+        public Wallet(Dictionary<string, CryptoExchange> exchanges)
         {
             foreach (var exchange in exchanges)
             {
-                _wallets.Add(exchange.Key, exchange.Value.Money);
+                money.Add(exchange.Key, exchange.Value.Money);
+                coins.Add(exchange.Key, exchange.Value.Amount);
             }
         }
 
-        public void Purchase(string exchangeId, decimal money)
+        public void SaleAll(Order order)
         {
-            if (!_wallets.Keys.Contains(exchangeId))
-                throw new ApplicationException($"Invalid exchangeId:{exchangeId}");
-
-            if (Math.Round(_wallets[exchangeId] - money,2) < 0)
-                throw new ApplicationException($"insufficient funds:{money} less then wallet has {_wallets[exchangeId]}");
-
-            _wallets[exchangeId] -= money;
+            Sale(order.ExchangeId, order.Amount);
         }
 
         public void PurchaseAll(Order order)
@@ -30,14 +26,48 @@
 
         public decimal Money(string exchangeId)
         {
-            return _wallets[exchangeId];
+            return money[exchangeId];
+        }
+
+        public decimal Coins(string exchangeId)
+        {
+            return coins[exchangeId];
         }
 
         public bool EmptyWallet(string exchangeId)
         {
-            if (!_wallets.ContainsKey(exchangeId)) return true;
+            if (!money.ContainsKey(exchangeId)) return true;
 
-            return (Math.Round(_wallets[exchangeId], 2) == 0);
+            return (Math.Round(money[exchangeId], 2) == 0);
+        }
+
+        public bool EmptyCoins(string exchangeId)
+        {
+            if (!coins.ContainsKey(exchangeId)) return true;
+
+            return (Math.Round(coins[exchangeId], 5) == 0);
+        }
+
+        private void Purchase(string exchangeId, decimal money)
+        {
+            if (!this.money.Keys.Contains(exchangeId))
+                throw new ApplicationException($"Invalid exchangeId:{exchangeId}");
+
+            if (Math.Round(this.money[exchangeId] - money, 2) < 0)
+                throw new ApplicationException($"insufficient funds:{money} less then wallet has {this.money[exchangeId]}");
+
+            this.money[exchangeId] -= money;
+        }
+
+        private void Sale(string exchangeId, decimal amount)
+        {
+            if (!this.coins.Keys.Contains(exchangeId))
+                throw new ApplicationException($"Invalid exchangeId:{exchangeId}");
+
+            if (Math.Round(this.coins[exchangeId] - amount, 5) < 0)
+                throw new ApplicationException($"insufficient coins:{amount} less then wallet has {this.coins[exchangeId]}");
+
+            this.coins[exchangeId] -= amount;
         }
     }
 }
