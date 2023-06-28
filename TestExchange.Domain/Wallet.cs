@@ -14,12 +14,18 @@
             }
         }
 
-        public void SaleAll(Order order)
+        public Wallet(Dictionary<string, Decimal> money, Dictionary<string, Decimal> coins)
+        {
+            this.money = money;
+            this.coins = coins;
+        }
+
+        public void Sale(Order order)
         {
             Sale(order.ExchangeId, order.Amount);
         }
 
-        public void PurchaseAll(Order order)
+        public void Purchase(Order order)
         {
             Purchase(order.ExchangeId, order.TotalCost);
         }

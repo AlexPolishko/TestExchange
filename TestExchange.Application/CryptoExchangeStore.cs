@@ -15,15 +15,7 @@ namespace TestExchange.Application
             this.reader = reader;
         }
 
-        private CryptoExchange Create(string Id, OrderBook orderBook)
-        {
-            decimal moneyBalance = 5;   //TODO: Need source from wallet
-            decimal BTCBalance = 5;     //TODO: Need source from wallet
-
-            return new CryptoExchange(Id, orderBook, moneyBalance, BTCBalance);
-        }
-
-        public void FulFillExchanges()
+        public void FulFillExchanges(Wallet wallet)
         {
             var orderbooks = reader.Read();
 
@@ -31,7 +23,7 @@ namespace TestExchange.Application
             Exchanges.Clear();
             foreach (var orderbook in orderbooks)
             {
-                var exchange = Create(orderbook.Key, orderbook.Value);
+                var exchange = Create(orderbook.Key, orderbook.Value, wallet);
                 Exchanges.Add(orderbook.Key, exchange);
                 FlattenedAsks.AddRange(exchange.OrderBook.Asks);
                 FlattenedBids.AddRange(exchange.OrderBook.Bids);
@@ -45,6 +37,19 @@ namespace TestExchange.Application
 
             t1.Stop();
             Console.WriteLine($"Sorting duration: {t1.ElapsedMilliseconds}");
+        }
+
+        private CryptoExchange Create(string Id, OrderBook orderbook, Wallet wallet)
+        {
+            decimal money = 0m;
+            if (!wallet.EmptyWallet(Id))
+                money = wallet.Money(Id);
+
+            decimal amount = 0m;
+            if (!wallet.EmptyCoins(Id))
+                amount = wallet.Coins(Id);
+
+            return new CryptoExchange(Id, orderbook, money, amount);
         }
     }
 }

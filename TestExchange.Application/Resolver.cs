@@ -102,13 +102,13 @@ namespace TestExchange.Application
         private void Buy(PurchaseList purchaseList, Order purchase)
         {
             purchaseList.AddPurchase(purchase);
-            wallet.PurchaseAll(purchase);
+            wallet.Purchase(purchase);
         }
 
         private void Sell(PurchaseList purchaseList, Order purchase)
         {
             purchaseList.AddPurchase(purchase);
-            wallet.SaleAll(purchase);
+            wallet.Sale(purchase);
         }
     }
 }
