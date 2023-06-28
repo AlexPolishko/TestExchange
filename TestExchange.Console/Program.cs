@@ -10,26 +10,21 @@ namespace TestExchange
             Console.WriteLine("Enter 'buy' or 'sell' transaction direction:");
 
             var transactionDirection = ChooseDirection();
-
             var reader = new OrderBookReader("order_books_data");
             var store = new CryptoExchangeStore(reader);
             store.FulFillExchanges();
-            Wallet wallet = new Wallet();
             PurchaseList result = new PurchaseList(0);
-            var amount = 0m;
+            var wallet = CreateWallet(store, transactionDirection == "sell");
+            var amount = InputValue($"Enter how much BTC you want to {transactionDirection}:");
+            var resolver = new Resolver(store, wallet);
+
             if (transactionDirection == "sell")
             {
-                wallet = CreateWallet(store, wallet, true);
-                amount = InputValue("Enter how much BTC you want to sell:");
-                var resolver = new Resolver(store, wallet);
                 result = resolver.Sell(amount);
             }
             else
             {
-                wallet = CreateWallet(store, wallet, false);
-                amount = InputValue("Enter how much BTC you want to buy:");
-                var resolver = new Resolver(store, wallet);
-                result = resolver.Buy(amount);
+                 result = resolver.Buy(amount);
             }
 
             if (result.RemainingAmount > 0)
@@ -45,13 +40,15 @@ namespace TestExchange
             }
         }
 
-        private static Wallet CreateWallet(CryptoExchangeStore store, Wallet wallet, bool isSell)
+        private static Wallet CreateWallet(CryptoExchangeStore store,  bool isSell)
         {
             string cryptoExchangeID;
+            var wallet = new Wallet();
             do
             {
                 var term = isSell ? "BTC" : "Money";
-                Console.WriteLine($"Enter cryptoExchangeID (decimal number) where you want to add your {term} or 'all' or 'random' or 'first' or 'last' or 'exit':");
+                Console.WriteLine($"Enter cryptoExchangeID (decimal number) where you want to add your {term} or 'all' or 'random' or 'first' or 'last':");
+                Console.WriteLine("Enter 'exit' for skip");
                 do
                 {
                     cryptoExchangeID = Console.ReadLine().ToLower();
