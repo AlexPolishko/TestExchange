@@ -16,6 +16,6 @@
             RemainingAmount -= purchase.Amount;
         }
 
-        public bool IsPurchaseSuccessful =>  RemainingAmount == 0;
+        public bool IsPurchaseSuccessful => RemainingAmount == 0;
     }
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TestExchange.API.Models;
 using TestExchange.Application;
-using TestExchange.Domain;
 
 namespace TestExchange.API.Controllers
 {

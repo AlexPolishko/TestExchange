@@ -19,7 +19,7 @@ namespace TestExchange.API.Controllers
         /// </summary>
         /// <returns>List of purchases</returns>
         [HttpPost("Buy")]
-        public IActionResult Buy([FromBody]decimal targetAmount)
+        public IActionResult Buy([FromBody] decimal targetAmount)
         {
             if (targetAmount < 0)
                 return BadRequest("targetAmount should be nonnegative");

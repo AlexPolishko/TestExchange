@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using TestExchange.Domain;
+﻿using TestExchange.Domain;
 
 namespace TestExchange.Application
 {

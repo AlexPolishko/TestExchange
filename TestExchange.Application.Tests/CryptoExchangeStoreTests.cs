@@ -15,7 +15,7 @@ namespace TestExchange.Application.Tests
             OrderBook orderBook = CreateTestOrderBookWithAsk(IdExchange1);
 
             Dictionary<string, OrderBook> dictionary = new Dictionary<string, OrderBook>{
-                {IdExchange1, orderBook }, 
+                {IdExchange1, orderBook },
                 {IdExchange2, orderBook } };
             IOrderBookReader reader = Substitute.For<IOrderBookReader>();
             reader.Read().Returns(dictionary);

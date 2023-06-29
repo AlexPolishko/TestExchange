@@ -64,7 +64,7 @@ namespace TestExchange
                 Console.WriteLine("Enter 'exit' for skip");
                 do
                 {
-                    cryptoExchangeID = Console.ReadLine().ToLower();
+                    cryptoExchangeID = Console.ReadLine()?.ToLower();
                     if (decimal.TryParse(cryptoExchangeID, out decimal parsesomeresult))
                         break;
 
@@ -94,7 +94,7 @@ namespace TestExchange
             string transactionDirection;
             do
             {
-                transactionDirection = Console.ReadLine().ToLower();
+                transactionDirection = Console.ReadLine()?.ToLower();
             } while (transactionDirection != "buy" && transactionDirection != "sell");
 
             Console.WriteLine("You chooused: " + transactionDirection);
