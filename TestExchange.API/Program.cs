@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Swashbuckle.Swagger;
 using System.Reflection;
 using TestExchange.Application;
@@ -9,7 +10,9 @@ namespace TestExchange.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var config = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json", optional: false)
+                        .Build();
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -25,8 +28,8 @@ namespace TestExchange.API
             builder.Services.AddSingleton<ICryptoExchangeStore, CryptoExchangeStore>();
             builder.Services.AddSingleton<IOrderBookReader, OrderBookReader>();
             builder.Services.AddScoped<IResolver, Resolver>();
+            builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
 
-            //builder.Services.AddScoped<IResolver, Resolver>();
 
             var app = builder.Build();
 

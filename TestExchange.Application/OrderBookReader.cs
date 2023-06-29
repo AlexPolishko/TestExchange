@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Options;
+using System.Text.Json;
 using TestExchange.Domain;
 
 namespace TestExchange.Application
@@ -7,10 +8,10 @@ namespace TestExchange.Application
     {
         private string filePath = "order_books_data";
 
-        //public OrderBookReader(string filePath)
-        //{
-        //    this.filePath = filePath;
-        //}
+        public OrderBookReader(IOptions<AppSettings> appSettings)
+        {
+            this.filePath = appSettings.Value.FilePath;
+        }
 
         public Dictionary<string, OrderBook> Read()
         {

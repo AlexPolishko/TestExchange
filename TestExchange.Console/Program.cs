@@ -1,4 +1,6 @@
-﻿using TestExchange.Application;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using TestExchange.Application;
 using TestExchange.Domain;
 
 namespace TestExchange
@@ -10,8 +12,20 @@ namespace TestExchange
             Console.WriteLine("Enter 'buy' or 'sell' transaction direction:");
 
             var transactionDirection = ChooseDirection();
-            var reader = new OrderBookReader();
-            var store = new CryptoExchangeStore(reader);
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            var serviceProvider = new ServiceCollection()
+                            .AddOptions()
+                            .Configure<AppSettings>(configuration.GetSection("appsettings"))
+                            .AddSingleton<IOrderBookReader, OrderBookReader>()
+                            .AddSingleton<ICryptoExchangeStore, CryptoExchangeStore>()
+                            .BuildServiceProvider();
+
+            var store = serviceProvider.GetRequiredService<ICryptoExchangeStore>();
             PurchaseList result = new PurchaseList(0);
             var walletService = CreateWallet(store, transactionDirection == "sell");
             var amount = InputValue($"Enter how much BTC you want to {transactionDirection}:");
@@ -23,7 +37,7 @@ namespace TestExchange
             }
             else
             {
-                 result = resolver.Buy(amount);
+                result = resolver.Buy(amount);
             }
 
             if (result.RemainingAmount > 0)
@@ -39,7 +53,7 @@ namespace TestExchange
             }
         }
 
-        private static WalletService CreateWallet(CryptoExchangeStore store,  bool isSell)
+        private static WalletService CreateWallet(ICryptoExchangeStore store, bool isSell)
         {
             string cryptoExchangeID;
             var wallet = new WalletService();
@@ -61,15 +75,15 @@ namespace TestExchange
                 var amount = InputValue($"Enter amount of {term}:");
 
                 if (cryptoExchangeID == "all")
-                    wallet.AddToAllExchange(store, isSell? 0m : amount, isSell ? amount : 0m);
+                    wallet.AddToAllExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "first")
-                    wallet.ChangeFirstExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeFirstExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "last")
-                    wallet.ChangeLastExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeLastExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "random")
-                    wallet.ChangeRandomExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeRandomExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (decimal.TryParse(cryptoExchangeID, out decimal parseresult))
-                    wallet.ChangeExchange(store,  parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeExchange(store, parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
 
             } while (cryptoExchangeID != "exit");
             return wallet;

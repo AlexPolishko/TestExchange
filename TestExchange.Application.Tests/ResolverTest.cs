@@ -348,7 +348,7 @@ namespace TestExchange.Application.Tests
                 if (i == 2) moneyDictionary.Add(exchangeId3, money[i]);
             }
             WalletService walletService = new WalletService();
-            walletService.CreateWallet(moneyDictionary, null);
+            walletService.CreateWallet(moneyDictionary, new Dictionary<string, decimal>());
 
             return walletService;
         }
@@ -364,7 +364,7 @@ namespace TestExchange.Application.Tests
                 if (i == 2) coinsDictionary.Add(exchangeId3, coins[i]);
             }
             WalletService walletService = new WalletService();
-            walletService.CreateWallet(null, coinsDictionary);
+            walletService.CreateWallet(new Dictionary<string, decimal>(), coinsDictionary);
 
             return walletService;
         }
