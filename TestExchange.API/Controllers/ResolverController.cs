@@ -25,6 +25,9 @@ namespace TestExchange.API.Controllers
                 return BadRequest("targetAmount should be nonnegative");
 
             var result = resolver.Buy(targetAmount);
+            if (!result.IsPurchaseSuccessful)
+                return BadRequest("You do not have enough funds to complete the purchase of the selected amount of BTC.");
+
             return Ok(result);
         }
 
@@ -39,6 +42,9 @@ namespace TestExchange.API.Controllers
                 return BadRequest("targetAmount should be nonnegative");
 
             var result = resolver.Sell(targetAmount);
+            if (!result.IsPurchaseSuccessful)
+                return BadRequest("You do not have enough coins to complete the sale of the selected amount of BTC.");
+
             return Ok(result);
         }
     }

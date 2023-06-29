@@ -31,7 +31,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(expected.RemainingAmount, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
 
@@ -208,7 +208,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace TestExchange.Application.Tests
 
             //Assert
             Assert.True(expected.Items.SequenceEqual(result.Items));
-            Assert.Equal(0, result.RemainingAmount);
+            Assert.True(result.IsPurchaseSuccessful);
         }
 
 
