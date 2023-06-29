@@ -17,9 +17,9 @@ namespace TestExchange.Application.Tests
             ICryptoExchangeStore store = CreateAsksWithAmount(1, 1, 1);
             var wallet = CreateWalletWithMoney(10m);
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
+                    { exchangeId1 , null }
                 });
 
             var resolver = new Resolver(store, wallet);
@@ -40,9 +40,9 @@ namespace TestExchange.Application.Tests
             //Arrange
             ICryptoExchangeStore store = CreateAsksWithAmount(1, 1, 1, 1);
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
+                    { exchangeId1 , null }
                 });
             var wallet = CreateWalletWithMoney(10m);
             var resolver = new Resolver(store, wallet);
@@ -66,10 +66,10 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(10, 10, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
+                    { exchangeId1 , null },
+                    { exchangeId2 , null }
 
                 });
             var wallet = CreateWalletWithMoney(2m, 3m);
@@ -93,10 +93,10 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(1, 1, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
+                    { exchangeId1 , null },
+                    { exchangeId2 , null }
 
                 });
             var wallet = CreateWalletWithMoney(2m, 5m);
@@ -127,10 +127,10 @@ namespace TestExchange.Application.Tests
                     new Order(1.2m,10,OrderType.Sell,exchangeId2),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
+                    { exchangeId1 , null },
+                    { exchangeId2 , null }
 
                 });
             var wallet = CreateWalletWithMoney(0.08m, 3m);
@@ -158,10 +158,10 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(10, 10, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
+                    { exchangeId1 , null },
+                    { exchangeId2 , null }
 
                 });
 
@@ -193,9 +193,9 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
+                    { exchangeId1 , null }
                 });
 
             var wallet = CreateWalletWithCoins(10m);
@@ -223,9 +223,9 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
+                    { exchangeId1 , null }
                 });
 
             var wallet = CreateWalletWithCoins(10m);
@@ -256,9 +256,9 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) }
+                    { exchangeId1 , null }
                 });
 
             var wallet = CreateWalletWithCoins(10m);
@@ -289,10 +289,10 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId3),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, CryptoExchange>
+            store.Exchanges.Returns(new Dictionary<string, OrderBook>
                 {
-                    { exchangeId1 , new CryptoExchange(exchangeId1, null) },
-                    { exchangeId2 , new CryptoExchange(exchangeId2, null) }
+                    { exchangeId1 , null },
+                    { exchangeId2 , null }
                 });
 
             var wallet = CreateWalletWithCoins(10m, 10m);
