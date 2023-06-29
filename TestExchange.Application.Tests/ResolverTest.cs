@@ -337,7 +337,7 @@ namespace TestExchange.Application.Tests
             return store;
         }
 
-        private static Wallet CreateWalletWithMoney(params decimal[] money)
+        private static WalletService CreateWalletWithMoney(params decimal[] money)
         {
             var moneyDictionary = new Dictionary<string, decimal>();
 
@@ -347,11 +347,13 @@ namespace TestExchange.Application.Tests
                 if (i == 1) moneyDictionary.Add(exchangeId2, money[i]);
                 if (i == 2) moneyDictionary.Add(exchangeId3, money[i]);
             }
+            WalletService walletService = new WalletService();
+            walletService.CreateWallet(moneyDictionary, null);
 
-            return new Wallet(moneyDictionary, null);
+            return walletService;
         }
 
-        private static Wallet CreateWalletWithCoins(params decimal[] coins)
+        private static WalletService CreateWalletWithCoins(params decimal[] coins)
         {
             var coinsDictionary = new Dictionary<string, decimal>();
 
@@ -361,8 +363,10 @@ namespace TestExchange.Application.Tests
                 if (i == 1) coinsDictionary.Add(exchangeId2, coins[i]);
                 if (i == 2) coinsDictionary.Add(exchangeId3, coins[i]);
             }
+            WalletService walletService = new WalletService();
+            walletService.CreateWallet(null, coinsDictionary);
 
-            return new Wallet(null, coinsDictionary);
+            return walletService;
         }
 
     }

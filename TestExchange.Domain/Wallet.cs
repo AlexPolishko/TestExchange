@@ -1,4 +1,7 @@
-﻿namespace TestExchange.Domain
+﻿using System.Text.Json;
+using System;
+
+namespace TestExchange.Domain
 {
     public class Wallet
     {
@@ -57,6 +60,22 @@
         public void AddCoins(string exchangeId, decimal amount)
         {
             this.coins[exchangeId] = amount;
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(new { money, coins });
+        }
+
+        public Wallet Clone()
+        {
+            var clone = new Wallet
+            (
+                new Dictionary<string, decimal>(this.money),
+                new Dictionary<string, decimal>(this.coins)
+            );
+
+            return clone;
         }
 
         private void Purchase(string exchangeId, decimal money)

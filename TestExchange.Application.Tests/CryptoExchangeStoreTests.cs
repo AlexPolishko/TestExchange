@@ -20,10 +20,8 @@ namespace TestExchange.Application.Tests
             IOrderBookReader reader = Substitute.For<IOrderBookReader>();
             reader.Read().Returns(dictionary);
 
-            var store = new CryptoExchangeStore(reader);
-
             // Act
-            store.FulFillExchanges();
+            var store = new CryptoExchangeStore(reader);
 
             // Assert
             Assert.Equal(IdExchange2, store.Exchanges[IdExchange2].Id);
@@ -44,10 +42,8 @@ namespace TestExchange.Application.Tests
             IOrderBookReader reader = Substitute.For<IOrderBookReader>();
             reader.Read().Returns(dictionary);
 
-            var store = new CryptoExchangeStore(reader);
-
             // Act
-            store.FulFillExchanges();
+            var store = new CryptoExchangeStore(reader);
 
             // Assert
             Assert.True(expected.SequenceEqual(store.FlattenedAsks));
@@ -68,10 +64,8 @@ namespace TestExchange.Application.Tests
             IOrderBookReader reader = Substitute.For<IOrderBookReader>();
             reader.Read().Returns(dictionary);
 
-            var store = new CryptoExchangeStore(reader);
-
             // Act
-            store.FulFillExchanges();
+            var store = new CryptoExchangeStore(reader);
 
             // Assert
             Assert.True(expected.SequenceEqual(store.FlattenedBids));

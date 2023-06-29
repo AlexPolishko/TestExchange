@@ -10,13 +10,12 @@ namespace TestExchange
             Console.WriteLine("Enter 'buy' or 'sell' transaction direction:");
 
             var transactionDirection = ChooseDirection();
-            var reader = new OrderBookReader("order_books_data");
+            var reader = new OrderBookReader();
             var store = new CryptoExchangeStore(reader);
-            store.FulFillExchanges();
             PurchaseList result = new PurchaseList(0);
-            var wallet = CreateWallet(store, transactionDirection == "sell");
+            var walletService = CreateWallet(store, transactionDirection == "sell");
             var amount = InputValue($"Enter how much BTC you want to {transactionDirection}:");
-            var resolver = new Resolver(store, wallet);
+            var resolver = new Resolver(store, walletService);
 
             if (transactionDirection == "sell")
             {
@@ -40,10 +39,10 @@ namespace TestExchange
             }
         }
 
-        private static Wallet CreateWallet(CryptoExchangeStore store,  bool isSell)
+        private static WalletService CreateWallet(CryptoExchangeStore store,  bool isSell)
         {
             string cryptoExchangeID;
-            var wallet = new Wallet();
+            var wallet = new WalletService();
             do
             {
                 var term = isSell ? "BTC" : "Money";
@@ -59,18 +58,18 @@ namespace TestExchange
 
                 if (cryptoExchangeID == "exit") break;
 
-                var amount = InputValue("Enter amount of BTC:");
+                var amount = InputValue($"Enter amount of {term}:");
 
                 if (cryptoExchangeID == "all")
-                    wallet = FillAllWallet(store, isSell? 0m : amount, isSell ? amount : 0m);
+                    wallet.AddToAllExchange(store, isSell? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "first")
-                    ChangeFirstExchange(store, wallet, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeFirstExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "last")
-                    ChangeLastExchange(store, wallet, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeLastExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "random")
-                    ChangeRandomExchange(store, wallet, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeRandomExchange(store,  isSell ? 0m : amount, isSell ? amount : 0m);
                 if (decimal.TryParse(cryptoExchangeID, out decimal parseresult))
-                    ChangeExchange(store, wallet, parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.ChangeExchange(store,  parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
 
             } while (cryptoExchangeID != "exit");
             return wallet;
@@ -108,64 +107,6 @@ namespace TestExchange
 
             Console.WriteLine("Valid decimal value entered: " + value);
             return value;
-        }
-
-        private static Wallet FillAllWallet(CryptoExchangeStore store, decimal money, decimal coins)
-        {
-            var moneyDictionary = new Dictionary<string, decimal>();
-            var coinsDictionary = new Dictionary<string, decimal>();
-
-            foreach (var item in store.Exchanges)
-            {
-                moneyDictionary.Add(item.Key, money);
-                coinsDictionary.Add(item.Key, coins);
-            }
-            Console.WriteLine($"All wallets with balance {money}$ / {coins}BTC");
-
-            return new Wallet(moneyDictionary, coinsDictionary);
-
-        }
-
-        private static void ChangeFirstExchange(CryptoExchangeStore store, Wallet wallet, decimal money, decimal coins)
-        {
-            var key = store.Exchanges.Keys.FirstOrDefault();
-            wallet.AddMoney(key, money);
-            wallet.AddCoins(key, coins);
-
-            Console.WriteLine($"First key: {key} with balance {money}$ / {coins}BTC");
-
-        }
-
-        private static void ChangeLastExchange(CryptoExchangeStore store, Wallet wallet, decimal money, decimal coins)
-        {
-            var key = store.Exchanges.Keys.LastOrDefault();
-            wallet.AddMoney(key, money);
-            wallet.AddCoins(key, coins);
-
-            Console.WriteLine($"Last key: {key} with balance {money}$ / {coins}BTC");
-        }
-        private static void ChangeRandomExchange(CryptoExchangeStore store, Wallet wallet, decimal money, decimal coins)
-        {
-            Random random = new Random();
-            int randomIndex = random.Next(store.Exchanges.Count);
-            var key = store.Exchanges.Keys.ElementAt(randomIndex);
-            wallet.AddMoney(key, money);
-            wallet.AddCoins(key, coins);
-
-            Console.WriteLine($"Random key: {key} with balance {money}$ / {coins}BTC");
-        }
-        private static void ChangeExchange(CryptoExchangeStore store, Wallet wallet, string exchangeId, decimal money, decimal coins)
-        {
-
-            if (!store.Exchanges.Keys.Contains(exchangeId))
-            {
-                Console.WriteLine($"Cann't found CryptoExchange with ID:{exchangeId}");
-            }
-
-            wallet.AddMoney(exchangeId, money);
-            wallet.AddCoins(exchangeId, coins);
-
-            Console.WriteLine($"Added {exchangeId} with balance {money}$ / {coins}BTC");
         }
     }
 }

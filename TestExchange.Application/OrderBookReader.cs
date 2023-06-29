@@ -5,12 +5,12 @@ namespace TestExchange.Application
 {
     public class OrderBookReader : IOrderBookReader
     {
-        private string filePath;
+        private string filePath = "order_books_data";
 
-        public OrderBookReader(string filePath)
-        {
-            this.filePath = filePath;
-        }
+        //public OrderBookReader(string filePath)
+        //{
+        //    this.filePath = filePath;
+        //}
 
         public Dictionary<string, OrderBook> Read()
         {

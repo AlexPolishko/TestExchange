@@ -13,9 +13,10 @@ namespace TestExchange.Application
         public CryptoExchangeStore(IOrderBookReader reader)
         {
             this.reader = reader;
+            FulFillExchanges();
         }
 
-        public void FulFillExchanges()
+        private void FulFillExchanges()
         {
             var orderbooks = reader.Read();
 

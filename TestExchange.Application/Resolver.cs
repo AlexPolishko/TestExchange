@@ -5,16 +5,17 @@ namespace TestExchange.Application
     public class Resolver : IResolver
     {
         private readonly ICryptoExchangeStore store;
-        private readonly Wallet wallet;
+        private readonly IWalletService walletService;
 
-        public Resolver(ICryptoExchangeStore store, Wallet wallet)
+        public Resolver(ICryptoExchangeStore store, IWalletService walletService)
         {
             this.store = store;
-            this.wallet = wallet;
+            this.walletService = walletService;
         }
 
         public PurchaseList Buy(decimal targetAmount)
         {
+            var wallet = walletService.GetWallet();
             var purchaseList = new PurchaseList(targetAmount);
 
             for (int index = 0; index < store.FlattenedAsks.Count; index++)
@@ -56,7 +57,7 @@ namespace TestExchange.Application
 
                 }
 
-                Buy(purchaseList, purchase);
+                Buy(purchaseList, purchase, wallet);
 
                 if (purchaseList.RemainingAmount == 0)
                     return purchaseList;
@@ -68,6 +69,7 @@ namespace TestExchange.Application
         public PurchaseList Sell(decimal targetAmount)
         {
             var purchaseList = new PurchaseList(targetAmount);
+            var wallet = walletService.GetWallet();
 
             for (int index = 0; index < store.FlattenedBids.Count; index++)
             {
@@ -103,7 +105,7 @@ namespace TestExchange.Application
                     }
                 }
 
-                Sell(purchaseList, purchase);
+                Sell(purchaseList, purchase, wallet);
 
                 if (purchaseList.RemainingAmount == 0)
                     return purchaseList;
@@ -113,13 +115,13 @@ namespace TestExchange.Application
             return purchaseList;
 
         }
-        private void Buy(PurchaseList purchaseList, Order purchase)
+        private void Buy(PurchaseList purchaseList, Order purchase, Wallet wallet)
         {
             purchaseList.AddPurchase(purchase);
             wallet.Purchase(purchase);
         }
 
-        private void Sell(PurchaseList purchaseList, Order purchase)
+        private void Sell(PurchaseList purchaseList, Order purchase, Wallet wallet)
         {
             purchaseList.AddPurchase(purchase);
             wallet.Sale(purchase);

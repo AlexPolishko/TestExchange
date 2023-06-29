@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExchange.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExchange.Application.Tests", "TestExchange.Application.Tests\TestExchange.Application.Tests.csproj", "{8EE916F1-DC3D-44C5-9DD2-D7D483A63BD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExchange.API", "TestExchange.API\TestExchange.API.csproj", "{7A91D1E2-12EC-4119-AEDB-55719FA5B401}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8EE916F1-DC3D-44C5-9DD2-D7D483A63BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EE916F1-DC3D-44C5-9DD2-D7D483A63BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EE916F1-DC3D-44C5-9DD2-D7D483A63BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A91D1E2-12EC-4119-AEDB-55719FA5B401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A91D1E2-12EC-4119-AEDB-55719FA5B401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A91D1E2-12EC-4119-AEDB-55719FA5B401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A91D1E2-12EC-4119-AEDB-55719FA5B401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
