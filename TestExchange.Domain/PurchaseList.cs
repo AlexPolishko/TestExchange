@@ -15,5 +15,10 @@
             Items.Add(purchase);
             RemainingAmount -= purchase.Amount;
         }
+
+        public bool IsPurchaseSuccessful()
+        {
+            return RemainingAmount == 0;
+        }
     }
 }

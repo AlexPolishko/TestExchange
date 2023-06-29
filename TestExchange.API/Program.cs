@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Swashbuckle.Swagger;
 using System.Reflection;
 using TestExchange.Application;
 

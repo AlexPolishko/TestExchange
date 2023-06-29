@@ -40,7 +40,7 @@ namespace TestExchange
                 result = resolver.Buy(amount);
             }
 
-            if (result.RemainingAmount > 0)
+            if (result.IsPurchaseSuccessful())
             {
                 Console.WriteLine($"You cannot {transactionDirection} all ordered BTC");
             }
@@ -75,15 +75,15 @@ namespace TestExchange
                 var amount = InputValue($"Enter amount of {term}:");
 
                 if (cryptoExchangeID == "all")
-                    wallet.AddToAllExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.SetMoneyCoinsToAllExchanges(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "first")
-                    wallet.ChangeFirstExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.SetMoneyCoinsToFirstExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "last")
-                    wallet.ChangeLastExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.SetMoneyCoinsToLasExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "random")
-                    wallet.ChangeRandomExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.SetMoneyCoinsToRandomExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (decimal.TryParse(cryptoExchangeID, out decimal parseresult))
-                    wallet.ChangeExchange(store, parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
+                    wallet.SetMoneyCoinsToExchange(store, parseresult.ToString(), isSell ? 0m : amount, isSell ? amount : 0m);
 
             } while (cryptoExchangeID != "exit");
             return wallet;

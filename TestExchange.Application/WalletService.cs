@@ -11,7 +11,7 @@ namespace TestExchange.Application
             wallet = new Wallet();
         }
 
-        public void AddToAllExchange(ICryptoExchangeStore store, decimal money, decimal coins)
+        public void SetMoneyCoinsToAllExchanges(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             var moneyDictionary = new Dictionary<string, decimal>();
             var coinsDictionary = new Dictionary<string, decimal>();
@@ -25,21 +25,21 @@ namespace TestExchange.Application
             wallet = new Wallet(moneyDictionary, coinsDictionary);
         }
 
-        public void ChangeFirstExchange(ICryptoExchangeStore store, decimal money, decimal coins)
+        public void SetMoneyCoinsToFirstExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             var key = store.Exchanges.Keys.FirstOrDefault();
             wallet.AddMoney(key, money);
             wallet.AddCoins(key, coins);
         }
 
-        public void ChangeLastExchange(ICryptoExchangeStore store, decimal money, decimal coins)
+        public void SetMoneyCoinsToLasExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             var key = store.Exchanges.Keys.LastOrDefault();
             wallet.AddMoney(key, money);
             wallet.AddCoins(key, coins);
         }
 
-        public void ChangeRandomExchange(ICryptoExchangeStore store, decimal money, decimal coins)
+        public void SetMoneyCoinsToRandomExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             Random random = new Random();
             int randomIndex = random.Next(store.Exchanges.Count);
@@ -48,7 +48,7 @@ namespace TestExchange.Application
             wallet.AddCoins(key, coins);
         }
 
-        public void ChangeExchange(ICryptoExchangeStore store, string exchangeId, decimal money, decimal coins)
+        public void SetMoneyCoinsToExchange(ICryptoExchangeStore store, string exchangeId, decimal money, decimal coins)
         {
 
             if (!store.Exchanges.Keys.Contains(exchangeId))
