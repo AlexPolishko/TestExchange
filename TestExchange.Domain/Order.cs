@@ -13,7 +13,6 @@
         public decimal Price { get; set; }
         public decimal Amount { get; set; }
         public OrderType OrderType { get; set; }
-
         public string ExchangeId { get; set; }
 
         public decimal TotalCost
@@ -32,7 +31,7 @@
         public static Order CreatePurchaseForAllMoney(Order order, Wallet wallet)
         {
             var amount = Decimal.Divide(wallet.Money(order.ExchangeId), order.Price);
-            return Order.CreatePurchase(order, amount);
+            return CreatePurchase(order, amount);
         }
     }
 }

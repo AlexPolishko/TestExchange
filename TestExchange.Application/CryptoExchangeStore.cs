@@ -4,7 +4,7 @@ namespace TestExchange.Application
 {
     public class CryptoExchangeStore : ICryptoExchangeStore
     {
-        private IOrderBookReader reader;
+        private readonly IOrderBookReader reader;
         public Dictionary<string, OrderBook> Exchanges { get; } = new Dictionary<string, OrderBook>();
         public List<Order> FlattenedAsks { get; } = new List<Order>();
         public List<Order> FlattenedBids { get; } = new List<Order>();

@@ -4,8 +4,8 @@ namespace TestExchange.Domain
 {
     public class Wallet
     {
-        private Dictionary<string, Decimal> money = new Dictionary<string, Decimal>();
-        private Dictionary<string, Decimal> coins = new Dictionary<string, Decimal>();
+        private readonly Dictionary<string, Decimal> money = new();
+        private readonly Dictionary<string, Decimal> coins = new();
 
         public Wallet()
         {
@@ -79,22 +79,22 @@ namespace TestExchange.Domain
 
         private void Purchase(string exchangeId, decimal money)
         {
-            if (!this.money.Keys.Contains(exchangeId))
-                throw new ApplicationException($"Invalid exchangeId:{exchangeId}");
+            if (!this.money.ContainsKey(exchangeId))
+                throw new ArgumentException($"Invalid exchangeId:{exchangeId}");
 
             if (Math.Round(this.money[exchangeId] - money, 2) < 0)
-                throw new ApplicationException($"insufficient funds:{money} less then wallet has {this.money[exchangeId]}");
+                throw new ArgumentException($"insufficient funds:{money} less then wallet has {this.money[exchangeId]}");
 
             this.money[exchangeId] -= money;
         }
 
         private void Sale(string exchangeId, decimal amount)
         {
-            if (!this.coins.Keys.Contains(exchangeId))
-                throw new ApplicationException($"Invalid exchangeId:{exchangeId}");
+            if (!this.coins.ContainsKey(exchangeId))
+                throw new ArgumentException($"Invalid exchangeId:{exchangeId}");
 
             if (Math.Round(this.coins[exchangeId] - amount, 5) < 0)
-                throw new ApplicationException($"insufficient coins:{amount} less then wallet has {this.coins[exchangeId]}");
+                throw new ArgumentException($"insufficient coins:{amount} less then wallet has {this.coins[exchangeId]}");
 
             this.coins[exchangeId] -= amount;
         }

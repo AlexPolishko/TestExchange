@@ -2,9 +2,8 @@
 
 namespace TestExchange.Application
 {
-    internal class OrderBookDTO
+    internal class OrderBookDto
     {
-        public string AcqTime { get; set; }
         public OrderContainer[] Bids { get; set; }
         public OrderContainer[] Asks { get; set; }
 

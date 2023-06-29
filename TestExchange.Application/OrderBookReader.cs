@@ -21,7 +21,7 @@ namespace TestExchange.Application
                 int linenumber = 0;
                 string line;
                 string[] parts;
-                OrderBookDTO orderbookDTO = null;
+                OrderBookDto orderbookDTO = null;
 
                 while ((line = reader.ReadLine()) != null)
                 {
@@ -31,7 +31,7 @@ namespace TestExchange.Application
 
                     try
                     {
-                        orderbookDTO = JsonSerializer.Deserialize<OrderBookDTO>(parts[1]);
+                        orderbookDTO = JsonSerializer.Deserialize<OrderBookDto>(parts[1]);
                     }
                     catch (JsonException ex)
                     {

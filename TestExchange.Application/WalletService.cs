@@ -28,6 +28,9 @@ namespace TestExchange.Application
         public void SetMoneyCoinsToFirstExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             var key = store.Exchanges.Keys.FirstOrDefault();
+
+            if (key == null) return;
+
             wallet.AddMoney(key, money);
             wallet.AddCoins(key, coins);
         }
@@ -35,6 +38,9 @@ namespace TestExchange.Application
         public void SetMoneyCoinsToLasExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
             var key = store.Exchanges.Keys.LastOrDefault();
+
+            if (key == null) return;
+
             wallet.AddMoney(key, money);
             wallet.AddCoins(key, coins);
         }

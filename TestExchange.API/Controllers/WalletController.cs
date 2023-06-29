@@ -8,13 +8,11 @@ namespace TestExchange.API.Controllers
     [Route("[controller]")]
     public class WalletController : ControllerBase
     {
-        private readonly ILogger<WalletController> _logger;
         private readonly IWalletService _walletService;
         private readonly ICryptoExchangeStore _store;
 
-        public WalletController(ILogger<WalletController> logger, IWalletService walletService, ICryptoExchangeStore store)
+        public WalletController(IWalletService walletService, ICryptoExchangeStore store)
         {
-            _logger = logger;
             _walletService = walletService;
             _store = store;
         }
