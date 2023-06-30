@@ -40,7 +40,7 @@ namespace TestExchange
                 result = resolver.Buy(amount);
             }
 
-            if (result.IsPurchaseSuccessful)
+            if (!result.IsPurchaseSuccessful)
             {
                 Console.WriteLine($"You cannot {transactionDirection} all ordered BTC");
             }
