@@ -5,7 +5,7 @@ namespace TestExchange.Application
     public class CryptoExchangeStore : ICryptoExchangeStore
     {
         private readonly IOrderBookReader reader;
-        public Dictionary<string, OrderBook> Exchanges { get; } = new Dictionary<string, OrderBook>();
+        public List<string> ExchangesId { get; } = new List<string>();
         public List<Order> FlattenedAsks { get; } = new List<Order>();
         public List<Order> FlattenedBids { get; } = new List<Order>();
 
@@ -19,10 +19,10 @@ namespace TestExchange.Application
         {
             var orderbooks = reader.Read();
 
-            Exchanges.Clear();
+            ExchangesId.Clear();
             foreach (var orderbook in orderbooks)
             {
-                Exchanges.Add(orderbook.Key, orderbook.Value);
+                ExchangesId.Add(orderbook.Key);
                 FlattenedAsks.AddRange(orderbook.Value.Asks);
                 FlattenedBids.AddRange(orderbook.Value.Bids);
             }

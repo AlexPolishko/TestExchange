@@ -16,10 +16,10 @@ namespace TestExchange.Application
             var moneyDictionary = new Dictionary<string, decimal>();
             var coinsDictionary = new Dictionary<string, decimal>();
 
-            foreach (var item in store.Exchanges)
+            foreach (var item in store.ExchangesId)
             {
-                moneyDictionary.Add(item.Key, money);
-                coinsDictionary.Add(item.Key, coins);
+                moneyDictionary.Add(item, money);
+                coinsDictionary.Add(item, coins);
             }
 
             wallet = new Wallet(moneyDictionary, coinsDictionary);
@@ -27,7 +27,7 @@ namespace TestExchange.Application
 
         public void SetMoneyCoinsToFirstExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
-            var key = store.Exchanges.Keys.FirstOrDefault();
+            var key = store.ExchangesId.FirstOrDefault();
 
             if (key == null) return;
 
@@ -37,7 +37,7 @@ namespace TestExchange.Application
 
         public void SetMoneyCoinsToLasExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
-            var key = store.Exchanges.Keys.LastOrDefault();
+            var key = store.ExchangesId.LastOrDefault();
 
             if (key == null) return;
 
@@ -47,9 +47,9 @@ namespace TestExchange.Application
 
         public void SetMoneyCoinsToRandomExchange(ICryptoExchangeStore store, decimal money, decimal coins)
         {
-            Random random = new Random();
-            int randomIndex = random.Next(store.Exchanges.Count);
-            var key = store.Exchanges.Keys.ElementAt(randomIndex);
+            Random random = new();
+            int randomIndex = random.Next(store.ExchangesId.Count);
+            var key = store.ExchangesId.ElementAt(randomIndex);
             wallet.AddMoney(key, money);
             wallet.AddCoins(key, coins);
         }
@@ -57,7 +57,7 @@ namespace TestExchange.Application
         public void SetMoneyCoinsToExchange(ICryptoExchangeStore store, string exchangeId, decimal money, decimal coins)
         {
 
-            if (!store.Exchanges.Keys.Contains(exchangeId))
+            if (!store.ExchangesId.Contains(exchangeId))
             {
                 return;
             }

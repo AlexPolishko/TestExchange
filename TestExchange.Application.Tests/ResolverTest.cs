@@ -17,10 +17,7 @@ namespace TestExchange.Application.Tests
             ICryptoExchangeStore store = CreateAsksWithAmount(1, 1, 1);
             var wallet = CreateWalletWithMoney(10m);
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1 });
 
             var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(amount);
@@ -40,10 +37,8 @@ namespace TestExchange.Application.Tests
             //Arrange
             ICryptoExchangeStore store = CreateAsksWithAmount(1, 1, 1, 1);
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1 });
+
             var wallet = CreateWalletWithMoney(10m);
             var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
@@ -66,12 +61,8 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(10, 10, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null },
-                    { exchangeId2 , null }
+            store.ExchangesId.Returns(new List<string> { exchangeId1, exchangeId2 });
 
-                });
             var wallet = CreateWalletWithMoney(2m, 3m);
             var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
@@ -93,12 +84,8 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(1, 1, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null },
-                    { exchangeId2 , null }
+            store.ExchangesId.Returns(new List<string> { exchangeId1, exchangeId2 });
 
-                });
             var wallet = CreateWalletWithMoney(2m, 5m);
             var resolver = new Resolver(store, wallet);
             var expected = new PurchaseList(0);
@@ -127,12 +114,8 @@ namespace TestExchange.Application.Tests
                     new Order(1.2m,10,OrderType.Sell,exchangeId2),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null },
-                    { exchangeId2 , null }
+            store.ExchangesId.Returns(new List<string> { exchangeId1, exchangeId2 });
 
-                });
             var wallet = CreateWalletWithMoney(0.08m, 3m);
 
             var resolver = new Resolver(store, wallet);
@@ -158,12 +141,7 @@ namespace TestExchange.Application.Tests
             //Arrange
             var store = CreateAsksInDifferentExchangesWithAmount(10, 10, 10, 10);
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null },
-                    { exchangeId2 , null }
-
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1, exchangeId2 });
 
             var wallet = CreateWalletWithMoney(2m, 3m);
 
@@ -192,11 +170,7 @@ namespace TestExchange.Application.Tests
                     new Order(2,5,OrderType.Sell,exchangeId1),
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
-
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1 });
 
             var wallet = CreateWalletWithCoins(10m);
             var resolver = new Resolver(store, wallet);
@@ -223,10 +197,8 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1 });
+
 
             var wallet = CreateWalletWithCoins(10m);
 
@@ -256,10 +228,8 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId1),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1 });
+
 
             var wallet = CreateWalletWithCoins(10m);
 
@@ -289,11 +259,7 @@ namespace TestExchange.Application.Tests
                     new Order(3,5,OrderType.Sell,exchangeId3),
                 });
 
-            store.Exchanges.Returns(new Dictionary<string, OrderBook>
-                {
-                    { exchangeId1 , null },
-                    { exchangeId2 , null }
-                });
+            store.ExchangesId.Returns(new List<string> { exchangeId1, exchangeId2 });
 
             var wallet = CreateWalletWithCoins(10m, 10m);
             var resolver = new Resolver(store, wallet);
@@ -347,7 +313,7 @@ namespace TestExchange.Application.Tests
                 if (i == 1) moneyDictionary.Add(exchangeId2, money[i]);
                 if (i == 2) moneyDictionary.Add(exchangeId3, money[i]);
             }
-            WalletService walletService = new WalletService();
+            WalletService walletService = new();
             walletService.CreateWallet(moneyDictionary, new Dictionary<string, decimal>());
 
             return walletService;
@@ -363,7 +329,7 @@ namespace TestExchange.Application.Tests
                 if (i == 1) coinsDictionary.Add(exchangeId2, coins[i]);
                 if (i == 2) coinsDictionary.Add(exchangeId3, coins[i]);
             }
-            WalletService walletService = new WalletService();
+            WalletService walletService = new();
             walletService.CreateWallet(new Dictionary<string, decimal>(), coinsDictionary);
 
             return walletService;

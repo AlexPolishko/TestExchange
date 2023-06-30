@@ -4,7 +4,7 @@ namespace TestExchange.Application
 {
     public interface ICryptoExchangeStore
     {
-        Dictionary<string, OrderBook> Exchanges { get; }
+        List<string> ExchangesId { get; }
         List<Order> FlattenedAsks { get; }
         List<Order> FlattenedBids { get; }
     }

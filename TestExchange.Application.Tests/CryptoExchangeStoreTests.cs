@@ -24,7 +24,7 @@ namespace TestExchange.Application.Tests
             var store = new CryptoExchangeStore(reader);
 
             // Assert
-            Assert.Equal(2, store.Exchanges.Count);
+            Assert.Equal(2, store.ExchangesId.Count);
         }
 
         [Fact]
