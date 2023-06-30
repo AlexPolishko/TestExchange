@@ -37,7 +37,7 @@ namespace TestExchange.API.Controllers
             if (money < 0)
                 return BadRequest("Money amount should be nonnegative");
 
-            _walletService.SetMoneyCoinsToAllExchanges(_store, money, 0m);
+            _walletService.SetMoneyToAllExchanges(_store, money);
             return Ok();
         }
 
@@ -50,7 +50,7 @@ namespace TestExchange.API.Controllers
             if (amount < 0)
                 return BadRequest("Coins amount should be nonnegative");
 
-            _walletService.SetMoneyCoinsToAllExchanges(_store, 0m, amount);
+            _walletService.SetCoinsToAllExchanges(_store, amount);
             return Ok();
         }
 

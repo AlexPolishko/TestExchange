@@ -4,17 +4,17 @@ namespace TestExchange.Domain
 {
     public class Wallet
     {
-        private readonly Dictionary<string, Decimal> money = new();
-        private readonly Dictionary<string, Decimal> coins = new();
+        private Dictionary<string, Decimal> money = new();
+        private Dictionary<string, Decimal> coins = new();
 
         public Wallet()
         {
         }
 
-        public Wallet(Dictionary<string, Decimal> money, Dictionary<string, Decimal> coins)
+        public void Add(Dictionary<string, Decimal>? money, Dictionary<string, Decimal>? coins)
         {
-            this.money = money;
-            this.coins = coins;
+            if (money != null) this.money = money;
+            if (coins != null) this.coins = coins;
         }
 
         public void Sale(Order order)
@@ -68,7 +68,8 @@ namespace TestExchange.Domain
 
         public Wallet Clone()
         {
-            var clone = new Wallet
+            var clone = new Wallet();
+            clone.Add
             (
                 new Dictionary<string, decimal>(this.money),
                 new Dictionary<string, decimal>(this.coins)

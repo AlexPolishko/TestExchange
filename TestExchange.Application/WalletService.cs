@@ -11,18 +11,28 @@ namespace TestExchange.Application
             wallet = new Wallet();
         }
 
-        public void SetMoneyCoinsToAllExchanges(ICryptoExchangeStore store, decimal money, decimal coins)
+        public void SetMoneyToAllExchanges(ICryptoExchangeStore store, decimal money)
         {
             var moneyDictionary = new Dictionary<string, decimal>();
-            var coinsDictionary = new Dictionary<string, decimal>();
 
             foreach (var item in store.ExchangesId)
             {
                 moneyDictionary.Add(item, money);
+            }
+
+            wallet.Add(moneyDictionary, null);
+        }
+
+        public void SetCoinsToAllExchanges(ICryptoExchangeStore store, decimal coins)
+        {
+            var coinsDictionary = new Dictionary<string, decimal>();
+
+            foreach (var item in store.ExchangesId)
+            {
                 coinsDictionary.Add(item, coins);
             }
 
-            wallet = new Wallet(moneyDictionary, coinsDictionary);
+            wallet.Add(null, coinsDictionary);
         }
 
         public void SetMoneyCoinsToFirstExchange(ICryptoExchangeStore store, decimal money, decimal coins)
@@ -73,8 +83,8 @@ namespace TestExchange.Application
 
         public void CreateWallet(Dictionary<string, decimal> money, Dictionary<string, decimal> coins)
         {
-            wallet = new Wallet(money, coins);
-
+            wallet = new Wallet();
+            wallet.Add(money, coins);
         }
     }
 }
