@@ -1,4 +1,6 @@
-﻿namespace TestExchange.Domain
+﻿using System.Collections.Generic;
+
+namespace TestExchange.Domain
 {
     public class PurchaseList
     {

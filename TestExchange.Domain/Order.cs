@@ -1,4 +1,6 @@
-﻿namespace TestExchange.Domain
+﻿using System;
+
+namespace TestExchange.Domain
 {
     public struct Order
     {
