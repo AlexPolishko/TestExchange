@@ -76,7 +76,17 @@ namespace TestExchange
                 var amount = InputValue($"Enter amount of {term}:");
 
                 if (cryptoExchangeID == "all")
-                    wallet.SetMoneyCoinsToAllExchanges(store, isSell ? 0m : amount, isSell ? amount : 0m);
+                {
+                    if (isSell)
+                    {
+                        wallet.SetCoinsToAllExchanges(store, amount);
+                    }
+                    else
+                    {
+                        wallet.SetMoneyToAllExchanges(store, amount);
+                    }
+                }
+
                 if (cryptoExchangeID == "first")
                     wallet.SetMoneyCoinsToFirstExchange(store, isSell ? 0m : amount, isSell ? amount : 0m);
                 if (cryptoExchangeID == "last")
